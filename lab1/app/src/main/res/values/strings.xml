@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kotlin_XML</string>
+    <string name="wiener">Wiener</string>
 </resources>
