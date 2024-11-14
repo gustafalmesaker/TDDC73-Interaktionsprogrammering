@@ -105,28 +105,17 @@
         android:layout_weight="1" />
 
     <!-- Email Input Field -->
-    <TextView
-        android:id="@+id/emailLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textColor="#000000"
-        app:layout_constraintTop_toBottomOf="@id/button3"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp" />
-
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:hint="Enter your email"
+        android:hint="Enter your email here"
         android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@id/emailLabel"
+        app:layout_constraintTop_toBottomOf="@id/button3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
