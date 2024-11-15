@@ -14,15 +14,15 @@
         android:id="@+id/titleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Example 1"
+        android:text="Kotlin + XML"
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:background="@android:color/holo_green_dark"
-        android:padding="8dp"/>
+        android:background="@color/darkGreen"
+        android:padding="24dp"/>
 
     <!-- Vertical and Horizontal Guidelines to help center buttons -->
     <androidx.constraintlayout.widget.Guideline
@@ -52,56 +52,41 @@
         android:contentDescription="Decorative circular image" />
 
     <!-- Buttons arranged in a 2x2 grid near the center of the screen -->
+
     <Button
         android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BUTTON"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#808080"
+        style="@style/CustomButtonStyle"
+        android:text="Button"
         app:layout_constraintTop_toBottomOf="@id/circularImage"
         app:layout_constraintEnd_toStartOf="@+id/guidelineCenterVertical"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_margin="16dp"
         android:layout_weight="1" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BUTTON"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#808080"
+        style="@style/CustomButtonStyle"
+        android:text="Button"
         app:layout_constraintTop_toBottomOf="@id/circularImage"
         app:layout_constraintStart_toEndOf="@+id/guidelineCenterVertical"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_margin="16dp"
         android:layout_weight="1" />
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BUTTON"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#808080"
+        style="@style/CustomButtonStyle"
+        android:text="Button"
         app:layout_constraintTop_toBottomOf="@id/button1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineCenterVertical"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_margin="16dp"
         android:layout_weight="1" />
 
     <Button
         android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BUTTON"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#808080"
+        style="@style/CustomButtonStyle"
+        android:text="Button"
         app:layout_constraintTop_toBottomOf="@id/button2"
         app:layout_constraintStart_toEndOf="@+id/guidelineCenterVertical"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_margin="16dp"
         android:layout_weight="1" />
 
     <!-- Email Input Field -->
