@@ -10,12 +10,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Example 1',
+      title: 'Flutter',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 39, 133, 42)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Example 1'),
+      home: const MyHomePage(title: 'Flutter'),
     );
   }
 }
@@ -42,13 +42,13 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 20),
-            // Circular Image
+            
             ClipOval(
               child: Image.asset(
                 'assets/circle.png',
-                width: 120, // Adjust width and height to set the size
+                width: 120, 
                 height: 120,
-                fit: BoxFit.cover, // Ensure the image covers the circle
+                fit: BoxFit.cover, 
               ),
             ),
 
@@ -61,6 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
               children: List.generate(2, (index) {
                 return ElevatedButton(
                   onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0)
+                      ),
+                  ),
                   child: const Text('BUTTON'),
                 );
               }),
@@ -72,12 +77,16 @@ class _MyHomePageState extends State<MyHomePage> {
               children: List.generate(2, (index) {
                 return ElevatedButton(
                   onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0)
+                      ),
+                  ),
                   child: const Text('BUTTON'),
                 );
               }),
             ),
             const SizedBox(height: 30),
-
             // Email Input Field
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
@@ -85,6 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
+                  focusedBorder:OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 215, 36, 24), width: 2.0), 
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 1.0), // Default grey border
+                  ),
                 ),
               ),
             ),
