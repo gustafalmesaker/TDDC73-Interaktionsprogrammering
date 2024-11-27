@@ -1,4 +1,3 @@
-// Button.tsx
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
@@ -17,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({ text, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#808080',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',

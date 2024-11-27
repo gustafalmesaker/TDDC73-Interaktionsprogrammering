@@ -1,61 +1,41 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, View } from 'react-native';
+import React, { useState } from 'react';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';  
+import { Input } from '@/components/ui/Input';
+import { Topper } from '@/components/ui/Topper';
+import { Empty } from '@/components/ui/Empty';
+import { Footer } from '@/components/ui/Footer';
 
 export default function HomeScreen() {
+  const [text, setText] = useState('');
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+    <ThemedView style={styles.main}>
+      <Topper title='Example 1'/>
+      <ThemedView style={styles.mainContent}>
+        <ThemedView style={styles.titleContainer}>
+          <Image source={require('@/assets/images/circle.png')} style={styles.reactLogo} />
+        </ThemedView>
+        <View style={styles.buttonContainer}>
+          <View style={styles.buttonRow}>
+            <Button text="Button" onPress={() => console.log("Button 1 Pressed")} />
+            <Button text="Button" onPress={() => console.log("Button 2 Pressed")} />
+          </View>
+          <View style={styles.buttonRow}>
+            <Button text="Button" onPress={() => console.log("Button 3 Pressed")} />
+            <Button text="Button" onPress={() => console.log("Button 4 Pressed")} />
+          </View>
+        </View>
+        
+        <Input placeholder='Write Email Here...' value={text} onChangeText={setText} />
+        </ThemedView>
+        <Footer></Footer>
       </ThemedView>
-      <Button text="Click Me1" onPress={() => console.log("Button Pressed")} />
-        <Button text="Click Me2" onPress={() => console.log("Button Pressed")} />
-        <Button text="Click Me3" onPress={() => console.log("Button Pressed")} />
-        <Button text="Click Me4" onPress={() => console.log("Button Pressed")} />
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
   );
 }
 
@@ -63,17 +43,34 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent:'space-around',
+    gap: 8,    
   },
-  stepContainer: {
+  buttonContainer: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around', 
     gap: 8,
-    marginBottom: 8,
+    marginVertical: 16,
+  },
+  buttonRow:{
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    gap: 8,
+
   },
   reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+    height: 100,
+    width: 100,
   },
+  main:{
+    height:800,
+    flexDirection:"column",
+    alignItems:"center",
+    justifyContent:"space-between"
+  }, 
+  mainContent:{
+    justifyContent:"space-between",
+  } 
+  
 });

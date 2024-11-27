@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
@@ -39,8 +39,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreenTopBar() {
     TopAppBar(
-        title = { Text("Example 1") },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF00C853))
+        title = { Text("Kotlin + Compose") },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF3F704D), titleContentColor = Color.White)
     )
 }
 
@@ -73,14 +73,21 @@ fun MainContent(modifier: Modifier = Modifier) {
             Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                 Button(
                     onClick = { /* no functionality */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray,
+                        contentColor = Color.Black),
+                        shape = RoundedCornerShape(0.dp)
+
                 ) {
                     Text("BUTTON")
                 }
                 Button(
                     onClick = { /* no functionality */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
-                    )
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray,
+                        contentColor = Color.Black),
+                        shape = RoundedCornerShape(0.dp)
+                )
                 { Text("BUTTON") }
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -88,12 +95,18 @@ fun MainContent(modifier: Modifier = Modifier) {
             Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                 Button(
                     onClick = { /* no functionality */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray,
+                        contentColor = Color.Black),
+                        shape = RoundedCornerShape(0.dp)
                     ) { Text("BUTTON")
                 }
                 Button(
                     onClick = { /* no functionality */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray,
+                        contentColor = Color.Black),
+                        shape = RoundedCornerShape(0.dp)
                     )
                 { Text("BUTTON") }
             }
@@ -110,8 +123,8 @@ fun MainContent(modifier: Modifier = Modifier) {
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Magenta,
-                cursorColor = Color.Magenta
+                focusedBorderColor = Color.Red,
+                cursorColor = Color.Red
             )
         )
     }
