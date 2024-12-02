@@ -1,17 +1,44 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, Pressable, Animated, ImageBackground } from 'react-native';
+import { SelectList } from 'react-native-dropdown-select-list';
+
 
 export default function HomeScreen() {
   const [cardNumber, setCardNumber] = useState<string>('');
   const [cardName, setCardName] = useState<string>('');
+  const [CVV, setCVV] = useState<string>('');
   const [month, setMonth] = useState<string>('');
   const [year, setYear] = useState<string>('');
 
-  const [focusedField, setFocusedField] = useState<string | null>(null); 
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const [numberAnimation] = useState(new Animated.Value(1));
   const [nameAnimation] = useState(new Animated.Value(1));
   const [dateAnimation] = useState(new Animated.Value(1));
+
+  const months = [
+    { key: '1', value: 'January' },
+    { key: '2', value: 'February' },
+    { key: '3', value: 'March' },
+    { key: '4', value: 'April' },
+    { key: '5', value: 'May' },
+    { key: '6', value: 'June' },
+    { key: '7', value: 'July' },
+    { key: '8', value: 'August' },
+    { key: '9', value: 'September' },
+    { key: '10', value: 'October' },
+    { key: '11', value: 'November' },
+    { key: '12', value: 'December' },
+  ];
+
+  const years = [
+    { key: '1', value: '2020' },
+    { key: '2', value: '2021' },
+    { key: '3', value: '2022' },
+    { key: '4', value: '2023' },
+    { key: '5', value: '2024' },
+  ];
+
 
   const animate = (animation: Animated.Value) => {
     Animated.sequence([
@@ -35,13 +62,19 @@ export default function HomeScreen() {
     animate(nameAnimation);
   };
 
-  const handleMonthChange = (text: string) => {
-    setMonth(text.slice(0, 2));
+  const handleCVVChange = (text: string) => {
+    setCVV(text);
+    animate(numberAnimation);
+  };
+
+
+  const handleMonthChange = (value: string) => {
+    setMonth(value);
     animate(dateAnimation);
   };
 
-  const handleYearChange = (text: string) => {
-    setYear(text.slice(0, 2));
+  const handleYearChange = (value: string) => {
+    setYear(value);
     animate(dateAnimation);
   };
 
@@ -52,24 +85,40 @@ export default function HomeScreen() {
   const borderStyle = (field: string) =>
     focusedField === field ? { borderColor: 'white', borderWidth: 1 } : {};
 
+  
+
   return (
     <View style={styles.container}>
+      
       <ImageBackground
-        source={require('@/assets/images/14.jpeg')}
+        source={
+          focusedField === 'CVV'
+            ? require('@/assets/images/7.jpeg') 
+            : require('@/assets/images/6.jpeg') 
+        }
         style={styles.cardContainer}
         imageStyle={{ borderRadius: 12 }}
       >
-        <Image
-    source={require('@/assets/images/chip.png')}
-    style={styles.smallImageTopLeft}
-      />
-      <Image
-        source={require('@/assets/images/visa.png')}
-        style={styles.smallImageTopRight}
-      />
-        <Image source={require('@/assets/images/mastercard.png')} style={styles.cardImage} resizeMode="cover" />
-        <View style={styles.cardDetails}>
+      
         
+        <Image
+          source={require('@/assets/images/chip.png')}
+          style={
+            focusedField === 'CVV'
+              ? styles.hidden
+              : styles.smallImageTopLeft}
+        />
+        <Image
+          source={require('@/assets/images/visa.png')}
+          style={
+            focusedField === 'CVV'
+              ? styles.hidden
+              : styles.smallImageTopRight}
+        />
+        
+        
+        <Image style={styles.cardImage} resizeMode="cover" />
+        <View style={styles.cardDetails}>
           <Animated.Text
             style={[styles.cardNumber, { transform: [{ scale: numberAnimation }] }, borderStyle('cardNumber')]}
           >
@@ -78,11 +127,11 @@ export default function HomeScreen() {
           <View style={styles.cardInfo}>
             <View style={styles.column}>
               <Text style={styles.cardText}>Card Holder</Text>
-                <Animated.Text
-                  style={[styles.cardHolder, { transform: [{ scale: nameAnimation }] }, borderStyle('cardName')]}
-                >
-                  {cardName || 'Card Holder'}
-                </Animated.Text>
+              <Animated.Text
+                style={[styles.cardHolder, { transform: [{ scale: nameAnimation }] }, borderStyle('cardName')]}
+              >
+                {cardName || 'Card Holder'}
+              </Animated.Text>
             </View>
 
             <View style={styles.column}>
@@ -96,6 +145,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </ImageBackground>
+
       <View style={styles.form}>
         <TextInput
           style={styles.input}
@@ -111,7 +161,7 @@ export default function HomeScreen() {
           onFocus={() => handleInputFocus('cardName')}
           onBlur={handleInputBlur}
           onChangeText={handleCardNameChange}
-        /> 
+        />
         <View style={styles.row}>
           <TextInput
             style={[styles.input, styles.halfInput]}
@@ -129,7 +179,17 @@ export default function HomeScreen() {
             onBlur={handleInputBlur}
             onChangeText={handleYearChange}
           />
+          <TextInput
+            style={[styles.input, styles.halfInput]}
+            placeholder="CVV"
+            keyboardType="numeric"
+            onFocus={() => handleInputFocus('CVV')}
+            onBlur={handleInputBlur}
+            onChangeText={handleCVVChange}
+          />
         </View>
+
+
         <Pressable style={styles.button}>
           <Text style={styles.buttonText}>Submit</Text>
         </Pressable>
@@ -144,7 +204,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8F4FC',
     alignItems: 'center',
     padding: 20,
-    paddingTop: 50, 
+    paddingTop: 50,
   },
   cardContainer: {
     backgroundColor: '#1D3D47',
@@ -183,12 +243,12 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 14,
     padding: 5,
-    textAlign:'center',
+    textAlign: 'center',
   },
   cardText: {
     color: '#A9A9A9',
     fontSize: 11,
-    textAlign: 'center',  
+    textAlign: 'center',
   },
   expiryDate: {
     color: '#FFF',
@@ -212,10 +272,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   column: {
-    flexDirection:'column'
+    flexDirection: 'column'
   },
   halfInput: {
-    width: '45%',
+    width: '30%',
   },
   button: {
     backgroundColor: '#1D3D47',
@@ -231,17 +291,20 @@ const styles = StyleSheet.create({
   },
   smallImageTopLeft: {
     position: 'absolute',
-    top: 25,  
+    top: 25,
     left: 25,
-    width: 55, 
-    height: 40, 
+    width: 55,
+    height: 40,
     borderRadius: 6,
   },
   smallImageTopRight: {
     position: 'absolute',
-    top: 25,  
-    right: 25, 
-    width: 65,  
-    height: 40,  
+    top: 25,
+    right: 25,
+    width: 65,
+    height: 40
   },
+  hidden: {
+    display: 'none'
+  }
 });
