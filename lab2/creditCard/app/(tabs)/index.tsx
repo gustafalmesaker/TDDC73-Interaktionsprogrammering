@@ -55,28 +55,44 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('@/assets/images/18.jpeg')}
+        source={require('@/assets/images/14.jpeg')}
         style={styles.cardContainer}
         imageStyle={{ borderRadius: 12 }}
       >
+        <Image
+    source={require('@/assets/images/chip.png')}
+    style={styles.smallImageTopLeft}
+      />
+      <Image
+        source={require('@/assets/images/visa.png')}
+        style={styles.smallImageTopRight}
+      />
         <Image source={require('@/assets/images/mastercard.png')} style={styles.cardImage} resizeMode="cover" />
         <View style={styles.cardDetails}>
+        
           <Animated.Text
             style={[styles.cardNumber, { transform: [{ scale: numberAnimation }] }, borderStyle('cardNumber')]}
           >
             {maskedCardNumber()}
           </Animated.Text>
           <View style={styles.cardInfo}>
-            <Animated.Text
-              style={[styles.cardHolder, { transform: [{ scale: nameAnimation }] }, borderStyle('cardName')]}
-            >
-              {cardName || 'Card Holder'}
-            </Animated.Text>
-            <Animated.Text
-              style={[styles.expiryDate, { transform: [{ scale: dateAnimation }] }, borderStyle('expiryDate')]}
-            >
-              {`${month.padEnd(2, 'M')}/${year.padEnd(2, 'Y')}`}
-            </Animated.Text>
+            <View style={styles.column}>
+              <Text style={styles.cardText}>Card Holder</Text>
+                <Animated.Text
+                  style={[styles.cardHolder, { transform: [{ scale: nameAnimation }] }, borderStyle('cardName')]}
+                >
+                  {cardName || 'Card Holder'}
+                </Animated.Text>
+            </View>
+
+            <View style={styles.column}>
+              <Text style={styles.cardText}>Expires</Text>
+              <Animated.Text
+                style={[styles.expiryDate, { transform: [{ scale: dateAnimation }] }, borderStyle('expiryDate')]}
+              >
+                {`${month.padEnd(2, 'M')}/${year.padEnd(2, 'Y')}`}
+              </Animated.Text>
+            </View>
           </View>
         </View>
       </ImageBackground>
@@ -91,11 +107,11 @@ export default function HomeScreen() {
         />
         <TextInput
           style={styles.input}
-          placeholder="Card Name"
+          placeholder="Card Holder"
           onFocus={() => handleInputFocus('cardName')}
           onBlur={handleInputBlur}
           onChangeText={handleCardNameChange}
-        />
+        /> 
         <View style={styles.row}>
           <TextInput
             style={[styles.input, styles.halfInput]}
@@ -128,6 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8F4FC',
     alignItems: 'center',
     padding: 20,
+    paddingTop: 50, 
   },
   cardContainer: {
     backgroundColor: '#1D3D47',
@@ -142,7 +159,7 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
-    height: 120,
+    height: 80,
     borderRadius: 8,
   },
   cardDetails: {
@@ -165,14 +182,17 @@ const styles = StyleSheet.create({
   cardHolder: {
     color: '#FFF',
     fontSize: 14,
-    flex: 1,
     padding: 5,
     textAlign:'center',
+  },
+  cardText: {
+    color: '#A9A9A9',
+    fontSize: 11,
+    textAlign: 'center',  
   },
   expiryDate: {
     color: '#FFF',
     fontSize: 14,
-    flex: 1,
     textAlign: 'center',
     padding: 5,
   },
@@ -191,6 +211,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  column: {
+    flexDirection:'column'
+  },
   halfInput: {
     width: '45%',
   },
@@ -205,5 +228,20 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  smallImageTopLeft: {
+    position: 'absolute',
+    top: 25,  
+    left: 25,
+    width: 55, 
+    height: 40, 
+    borderRadius: 6,
+  },
+  smallImageTopRight: {
+    position: 'absolute',
+    top: 25,  
+    right: 25, 
+    width: 65,  
+    height: 40,  
   },
 });
