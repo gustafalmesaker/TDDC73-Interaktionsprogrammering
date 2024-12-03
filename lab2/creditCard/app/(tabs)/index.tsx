@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, Pressable, Animated, ImageBackground } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
-
+import { red } from 'react-native-reanimated/lib/typescript/Colors';
 
 export default function HomeScreen() {
   const [cardNumber, setCardNumber] = useState<string>('');
@@ -17,28 +17,33 @@ export default function HomeScreen() {
   const [dateAnimation] = useState(new Animated.Value(1));
 
   const months = [
-    { key: '1', value: 'January' },
-    { key: '2', value: 'February' },
-    { key: '3', value: 'March' },
-    { key: '4', value: 'April' },
-    { key: '5', value: 'May' },
-    { key: '6', value: 'June' },
-    { key: '7', value: 'July' },
-    { key: '8', value: 'August' },
-    { key: '9', value: 'September' },
+    { key: '01', value: 'January' },
+    { key: '02', value: 'February' },
+    { key: '03', value: 'March' },
+    { key: '04', value: 'April' },
+    { key: '05', value: 'May' },
+    { key: '06', value: 'June' },
+    { key: '07', value: 'July' },
+    { key: '08', value: 'August' },
+    { key: '09', value: 'September' },
     { key: '10', value: 'October' },
     { key: '11', value: 'November' },
     { key: '12', value: 'December' },
   ];
 
   const years = [
-    { key: '1', value: '2020' },
-    { key: '2', value: '2021' },
-    { key: '3', value: '2022' },
-    { key: '4', value: '2023' },
-    { key: '5', value: '2024' },
+    { key: '2020', value: '2020' },
+    { key: '2021', value: '2021' },
+    { key: '2022', value: '2022' },
+    { key: '2023', value: '2023' },
+    { key: '2024', value: '2024' },
+    { key: '2025', value: '2025' },
+    { key: '2026', value: '2026' },
+    { key: '2027', value: '2027' },
+    { key: '2028', value: '2028' },
+    { key: '2029', value: '2029' },
+    { key: '2030', value: '2030' },
   ];
-
 
   const animate = (animation: Animated.Value) => {
     Animated.sequence([
@@ -62,12 +67,6 @@ export default function HomeScreen() {
     animate(nameAnimation);
   };
 
-  const handleCVVChange = (text: string) => {
-    setCVV(text);
-    animate(numberAnimation);
-  };
-
-
   const handleMonthChange = (value: string) => {
     setMonth(value);
     animate(dateAnimation);
@@ -78,6 +77,12 @@ export default function HomeScreen() {
     animate(dateAnimation);
   };
 
+
+  const handleCVVChange = (text: string) => {
+    setCVV(text);
+    animate(numberAnimation);
+  };
+
   const maskedCardNumber = () => {
     return cardNumber.padEnd(16, '#').replace(/(.{4})(?=.)/g, '$1 ');
   };
@@ -85,47 +90,45 @@ export default function HomeScreen() {
   const borderStyle = (field: string) =>
     focusedField === field ? { borderColor: 'white', borderWidth: 1 } : {};
 
-  
-
   return (
     <View style={styles.container}>
-      
       <ImageBackground
         source={
           focusedField === 'CVV'
-            ? require('@/assets/images/7.jpeg') 
-            : require('@/assets/images/6.jpeg') 
+            ? require('@/assets/images/7.jpeg')
+            : require('@/assets/images/6.jpeg')
         }
         style={styles.cardContainer}
         imageStyle={{ borderRadius: 12 }}
       >
-      
-        
+        {focusedField === 'CVV' && (
+          // Magnetic strip
+          <View style={styles.magneticStrip}></View>
+        )}
         <Image
           source={require('@/assets/images/chip.png')}
-          style={
-            focusedField === 'CVV'
-              ? styles.hidden
-              : styles.smallImageTopLeft}
+          style={focusedField === 'CVV' ? styles.hidden : styles.smallImageTopLeft}
         />
         <Image
           source={require('@/assets/images/visa.png')}
-          style={
-            focusedField === 'CVV'
-              ? styles.hidden
-              : styles.smallImageTopRight}
+          style={focusedField === 'CVV' ? styles.hidden : styles.smallImageTopRight}
         />
-        
-        
+
         <Image style={styles.cardImage} resizeMode="cover" />
         <View style={styles.cardDetails}>
+
           <Animated.Text
             style={[styles.cardNumber, { transform: [{ scale: numberAnimation }] }, borderStyle('cardNumber')]}
           >
-            {maskedCardNumber()}
+            {focusedField === 'CVV'
+            ? <View style={styles.CVVContainer}>
+                <Text style={styles.CVVText}> {CVV} </Text>
+              </View>
+            : maskedCardNumber()}
+
           </Animated.Text>
           <View style={styles.cardInfo}>
-            <View style={styles.column}>
+            <View style={focusedField === 'CVV' ? styles.hidden : styles.column}>
               <Text style={styles.cardText}>Card Holder</Text>
               <Animated.Text
                 style={[styles.cardHolder, { transform: [{ scale: nameAnimation }] }, borderStyle('cardName')]}
@@ -134,13 +137,19 @@ export default function HomeScreen() {
               </Animated.Text>
             </View>
 
-            <View style={styles.column}>
+            <View style={focusedField === 'CVV' ? styles.hidden : styles.column} >
               <Text style={styles.cardText}>Expires</Text>
               <Animated.Text
                 style={[styles.expiryDate, { transform: [{ scale: dateAnimation }] }, borderStyle('expiryDate')]}
               >
-                {`${month.padEnd(2, 'M')}/${year.padEnd(2, 'Y')}`}
+                {`${month || 'MM'}/${year || 'YY'}`}
               </Animated.Text>
+            </View>
+
+            <View style={focusedField === 'CVV' ? styles.rowReverse : styles.hidden}>
+            <Image
+              source={require('@/assets/images/visa.png')}
+              style={focusedField === 'CVV' ? styles.smallImageBottomRight : styles.hidden}/>
             </View>
           </View>
         </View>
@@ -163,33 +172,38 @@ export default function HomeScreen() {
           onChangeText={handleCardNameChange}
         />
         <View style={styles.row}>
-          <TextInput
-            style={[styles.input, styles.halfInput]}
-            placeholder="Month"
-            keyboardType="numeric"
-            onFocus={() => handleInputFocus('expiryDate')}
-            onBlur={handleInputBlur}
-            onChangeText={handleMonthChange}
-          />
-          <TextInput
-            style={[styles.input, styles.halfInput]}
-            placeholder="Year"
-            keyboardType="numeric"
-            onFocus={() => handleInputFocus('expiryDate')}
-            onBlur={handleInputBlur}
-            onChangeText={handleYearChange}
-          />
-          <TextInput
-            style={[styles.input, styles.halfInput]}
-            placeholder="CVV"
-            keyboardType="numeric"
-            onFocus={() => handleInputFocus('CVV')}
-            onBlur={handleInputBlur}
-            onChangeText={handleCVVChange}
-          />
+          <View style={styles.column}>
+            <Text style={styles.cardText}>Month</Text>
+            <SelectList
+              setSelected={(value: React.SetStateAction<string>) => setMonth(value)}
+              data={months}
+              placeholder="Month"
+              search={false}
+              boxStyles={styles.selectBox}
+            />
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.cardText}>Year</Text>
+            <SelectList
+              setSelected={(value: React.SetStateAction<string>) => setYear(value)}
+              data={years}
+              placeholder="Year"
+              search={false}
+              boxStyles={styles.selectBox}
+            />
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.cardText}>CVV</Text>
+            <TextInput
+              style={[styles.input, styles.halfInput, styles.inputCVV]}
+              placeholder="CVV"
+              keyboardType="numeric"
+              onFocus={() => handleInputFocus('CVV')}
+              onBlur={handleInputBlur}
+              onChangeText={handleCVVChange}
+            />  
+          </View>
         </View>
-
-
         <Pressable style={styles.button}>
           <Text style={styles.buttonText}>Submit</Text>
         </Pressable>
@@ -270,6 +284,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },rowReverse: {
+    flexDirection: 'row-reverse',
+    width:300
   },
   column: {
     flexDirection: 'column'
@@ -304,7 +321,44 @@ const styles = StyleSheet.create({
     width: 65,
     height: 40
   },
+  smallImageBottomRight: {
+    width: 65,
+    height: 40,
+  },
+  
   hidden: {
     display: 'none'
-  }
+  },
+  selectBox: {
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#CCC',
+    height: 50,
+    width: 100
+  },
+  inputCVV: {
+    height: 50,
+    width: 100,
+    textAlign:'center'
+  },
+  CVVContainer: {
+    width: 500,
+    height:40,
+    textAlign:'center',
+    backgroundColor: '#FFF'
+  },
+  CVVText: {
+    color: 'black',
+    textAlign:'right'
+  },
+  magneticStrip: {
+    position: 'absolute',
+    top: 30,
+    left: 0,
+    right: 0,
+    height: 40,
+    backgroundColor: 'black',
+  },
+  
 });
