@@ -9,9 +9,7 @@ export default function HomeScreen() {
   const [CVV, setCVV] = useState<string>('');
   const [month, setMonth] = useState<string>('');
   const [year, setYear] = useState<string>('');
-
   const [focusedField, setFocusedField] = useState<string | null>(null);
-
   const [numberAnimation] = useState(new Animated.Value(1));
   const [nameAnimation] = useState(new Animated.Value(1));
   const [dateAnimation] = useState(new Animated.Value(1));
@@ -56,16 +54,18 @@ export default function HomeScreen() {
   const handleInputBlur = () => setFocusedField(null);
 
   const handleCardNumberChange = (text: string) => {
-    if (text.length < 17) {
-      setCardNumber(text.slice(0, 16));
+    const numericText = text.replace(/[^0-9]/g, '');
+    if (numericText.length <= 16) {
+      setCardNumber(numericText);
       animate(numberAnimation);
     }
   };
 
   const handleCardNameChange = (text: string) => {
-    setCardName(text);
-    animate(nameAnimation);
-  };
+  const nameText = text.replace(/[^a-zA-Z\s]/g, '');
+  setCardName(nameText);
+  animate(nameAnimation);
+};
 
   const handleMonthChange = (value: string) => {
     setMonth(value);
@@ -77,10 +77,12 @@ export default function HomeScreen() {
     animate(dateAnimation);
   };
 
-
   const handleCVVChange = (text: string) => {
-    setCVV(text);
-    animate(numberAnimation);
+    const numericText = text.replace(/[^0-9]/g, '');
+    if (numericText.length <= 4) {
+      setCVV(numericText);
+      animate(numberAnimation);
+    }
   };
 
   const maskedCardNumber = () => {
@@ -102,7 +104,6 @@ export default function HomeScreen() {
         imageStyle={{ borderRadius: 12 }}
       >
         {focusedField === 'CVV' && (
-          // Magnetic strip
           <View style={styles.magneticStrip}></View>
         )}
         <Image
@@ -113,19 +114,16 @@ export default function HomeScreen() {
           source={require('@/assets/images/visa.png')}
           style={focusedField === 'CVV' ? styles.hidden : styles.smallImageTopRight}
         />
-
         <Image style={styles.cardImage} resizeMode="cover" />
         <View style={styles.cardDetails}>
-
           <Animated.Text
             style={[styles.cardNumber, { transform: [{ scale: numberAnimation }] }, borderStyle('cardNumber')]}
           >
             {focusedField === 'CVV'
             ? <View style={styles.CVVContainer}>
-                <Text style={styles.CVVText}> {CVV} </Text>
+                <Text style={styles.CVVText}> {CVV || 'xxxx'} </Text>
               </View>
             : maskedCardNumber()}
-
           </Animated.Text>
           <View style={styles.cardInfo}>
             <View style={focusedField === 'CVV' ? styles.hidden : styles.column}>
@@ -136,7 +134,6 @@ export default function HomeScreen() {
                 {cardName || 'Card Holder'}
               </Animated.Text>
             </View>
-
             <View style={focusedField === 'CVV' ? styles.hidden : styles.column} >
               <Text style={styles.cardText}>Expires</Text>
               <Animated.Text
@@ -145,7 +142,6 @@ export default function HomeScreen() {
                 {`${month || 'MM'}/${year || 'YY'}`}
               </Animated.Text>
             </View>
-
             <View style={focusedField === 'CVV' ? styles.rowReverse : styles.hidden}>
             <Image
               source={require('@/assets/images/visa.png')}
@@ -154,23 +150,29 @@ export default function HomeScreen() {
           </View>
         </View>
       </ImageBackground>
-
       <View style={styles.form}>
-        <TextInput
-          style={styles.input}
-          placeholder="Card Number"
-          keyboardType="numeric"
-          onFocus={() => handleInputFocus('cardNumber')}
-          onBlur={handleInputBlur}
-          onChangeText={handleCardNumberChange}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Card Holder"
-          onFocus={() => handleInputFocus('cardName')}
-          onBlur={handleInputBlur}
-          onChangeText={handleCardNameChange}
-        />
+        <View style={styles.column}>
+          <Text style={[styles.cardText , styles.InputLabel]}>Card Number</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Card Number"
+            keyboardType="numeric"
+            onFocus={() => handleInputFocus('cardNumber')}
+            onBlur={handleInputBlur}
+            onChangeText={handleCardNumberChange}
+            maxLength={16}
+          />
+        </View>
+        <View style={styles.column}>
+          <Text style={[styles.cardText , styles.InputLabel]}>Card Holder</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Name Lastname"
+            onFocus={() => handleInputFocus('cardName')}
+            onBlur={handleInputBlur}
+            onChangeText={handleCardNameChange}
+          />
+        </View>
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.cardText}>Month</Text>
@@ -197,6 +199,7 @@ export default function HomeScreen() {
             <TextInput
               style={[styles.input, styles.halfInput, styles.inputCVV]}
               placeholder="CVV"
+              maxLength={4}
               keyboardType="numeric"
               onFocus={() => handleInputFocus('CVV')}
               onBlur={handleInputBlur}
@@ -227,9 +230,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 15,
+    elevation: 30,
+    position: 'absolute',
+    marginTop: 100,
+    zIndex: 2,
   },
   cardImage: {
     width: '100%',
@@ -264,6 +270,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: 'center',
   },
+  InputLabel: {
+    textAlign:'left',
+    marginLeft: 5
+  },
   expiryDate: {
     color: '#FFF',
     fontSize: 14,
@@ -272,6 +282,12 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '100%',
+    marginTop: 175,
+    backgroundColor: 'white',
+    padding: 10,
+    paddingTop: 120,
+    borderRadius: 10,
+    zIndex: 1
   },
   input: {
     backgroundColor: '#FFF',
@@ -280,6 +296,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     borderColor: '#CCC',
+    color:'black'
   },
   row: {
     flexDirection: 'row',
@@ -345,12 +362,13 @@ const styles = StyleSheet.create({
   CVVContainer: {
     width: 500,
     height:40,
-    textAlign:'center',
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
+    justifyContent:'center'
   },
   CVVText: {
     color: 'black',
-    textAlign:'right'
+    textAlign:'right',
+    fontSize: 14
   },
   magneticStrip: {
     position: 'absolute',
@@ -360,5 +378,4 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: 'black',
   },
-  
 });
