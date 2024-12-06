@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, Linking, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Linking } from 'react-native';
 import { gql, useQuery } from '@apollo/client';
 
+const languages = ["All", "JavaScript", "TypeScript", "HTML","Python", "Java", "C++", "Ruby"]; // Language options
+
 const GET_TRENDING_REPOS = gql`
-  query GetTrendingRepos {
-    search(query: "stars:>1", type: REPOSITORY, first: 20) {
+  query GetTrendingRepos($query: String!) {
+    search(query: $query, type: REPOSITORY, first: 20) {
       edges {
         node {
           ... on Repository {
@@ -13,10 +15,13 @@ const GET_TRENDING_REPOS = gql`
             url
             stargazerCount
             forkCount
-            createdAt
+            pushedAt
             owner {
               login
               avatarUrl
+            }
+            primaryLanguage {
+              name
             }
           }
         }
@@ -25,59 +30,78 @@ const GET_TRENDING_REPOS = gql`
   }
 `;
 
-
-
 const TrendingRepos = () => {
-  const [since, setSince] = useState("2015-01-01"); // Default date
+  const [timeFrame, setTimeFrame] = useState("last week");
+  const [selectedLanguage, setSelectedLanguage] = useState("All");
 
-  // Use the 'useQuery' hook to fetch the data
-  const { loading, error, data } = useQuery(GET_TRENDING_REPOS, {
-    variables: { since }, // Pass the 'since' state variable to the query
-  });
-  
-
-  console.log(data);  // Log to check if data is being fetched
-
-  // Filter repositories based on 'since' date
-  const filteredRepos = data
-    ? data.search.edges.filter((repo) => {
-        const repoCreatedAt = new Date(repo.node.createdAt);
-        const sinceDate = new Date(since);
-
-        // Strip time component by setting both dates to midnight
-        repoCreatedAt.setHours(0, 0, 0, 0);
-        sinceDate.setHours(0, 0, 0, 0);
-
-        console.log("Repo created at:", repoCreatedAt, "Since date:", sinceDate);  // Log for debugging
-        return repoCreatedAt >= sinceDate;
-      })
-    : [];
-
-  const handleDateChange = (date) => {
-    setSince(date);
+  const calculateStartDate = () => {
+    const today = new Date();
+    switch (timeFrame) {
+      case "last month":
+        today.setMonth(today.getMonth() - 1);
+        break;
+      case "last year":
+        today.setFullYear(today.getFullYear() - 1);
+        break;
+      default:
+        today.setDate(today.getDate() - 7);
+    }
+    return today.toISOString().split("T")[0];
   };
+
+  const startDate = calculateStartDate();
+
+  const generateQuery = () => {
+    const languageFilter = selectedLanguage !== "All" ? `language:${selectedLanguage}` : "";
+    return `stars:>1 pushed:>${startDate} ${languageFilter}`;
+  };
+
+  const { loading, error, data } = useQuery(GET_TRENDING_REPOS, {
+    variables: { query: generateQuery() },
+  });
+
+  const repos = data?.search?.edges || [];
 
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
 
-  // If no repositories match the filter
-  if (filteredRepos.length === 0) {
-    return <Text>No repositories found for the given date filter.</Text>;
-  }
-
   return (
     <View style={styles.container}>
-      {/* Input for custom date */}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter a date (YYYY-MM-DD)"
-        value={since}
-        onChangeText={handleDateChange}
-      />
+      {/* Time Frame Buttons */}
+      <View style={styles.filterContainer}>
+        {["last week", "last month", "last year"].map((frame) => (
+          <TouchableOpacity
+            key={frame}
+            onPress={() => setTimeFrame(frame)}
+            style={[
+              styles.filterButton,
+              timeFrame === frame && styles.selectedFilterButton,
+            ]}
+          >
+            <Text style={styles.filterText}>{frame}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
-      {/* Display filtered repositories */}
+      {/* Language Dropdown */}
+      <View style={styles.filterContainer}>
+        {languages.map((lang) => (
+          <TouchableOpacity
+            key={lang}
+            onPress={() => setSelectedLanguage(lang)}
+            style={[
+              styles.filterButton,
+              selectedLanguage === lang && styles.selectedFilterButton,
+            ]}
+          >
+            <Text style={styles.filterText}>{lang}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Repository List */}
       <FlatList
-        data={filteredRepos}
+        data={repos}
         keyExtractor={(item) => item.node.url}
         renderItem={({ item }) => {
           const repo = item.node;
@@ -89,8 +113,8 @@ const TrendingRepos = () => {
                   <Text style={styles.name}>{repo.name}</Text>
                   <Text>{repo.description}</Text>
                   <Text>⭐ {repo.stargazerCount} | 🍴 {repo.forkCount}</Text>
-                  <Text>👤 {repo.owner.login}</Text>
-                  <Text>Created at: {repo.createdAt}</Text>
+                  <Text>Language: {repo.primaryLanguage?.name || "N/A"}</Text>
+                  <Text>Last updated: {repo.pushedAt}</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -106,14 +130,34 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  filterContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 10,
+  },
+  filterButton: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  selectedFilterButton: {
+    backgroundColor: "#007bff",
+    borderColor: "#0056b3",
+  },
+  filterText: {
+    color: "black",
+    fontWeight: "bold",
+  },
   card: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
     marginVertical: 5,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   avatar: {
     width: 50,
@@ -125,15 +169,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    paddingLeft: 8,
-    marginBottom: 10,
   },
 });
 
