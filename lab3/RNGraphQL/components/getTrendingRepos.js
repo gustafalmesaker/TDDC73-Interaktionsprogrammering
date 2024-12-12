@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Linking } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { gql, useQuery } from '@apollo/client';
 
-const languages = ["All", "JavaScript", "TypeScript", "HTML","Python", "Java", "C++", "Ruby", "Go"]; // Language options
+const languages = ["All", "JavaScript", "TypeScript", "HTML", "Python", "Java", "C++", "Ruby", "Go"]; // Language options
 
 const GET_TRENDING_REPOS = gql`
   query GetTrendingRepos($query: String!) {
@@ -30,7 +30,7 @@ const GET_TRENDING_REPOS = gql`
   }
 `;
 
-const TrendingRepos = () => {
+const TrendingRepos = ({ navigation }) => {
   const [timeFrame, setTimeFrame] = useState("last week");
   const [selectedLanguage, setSelectedLanguage] = useState("All");
 
@@ -67,7 +67,6 @@ const TrendingRepos = () => {
 
   return (
     <View style={styles.container}>
-      {/* Time Frame Buttons */}
       <View style={styles.filterContainer}>
         {["last week", "last month", "last year"].map((frame) => (
           <TouchableOpacity
@@ -83,7 +82,6 @@ const TrendingRepos = () => {
         ))}
       </View>
 
-      {/* Language Dropdown */}
       <View style={styles.filterContainer}>
         {languages.map((lang) => (
           <TouchableOpacity
@@ -98,15 +96,16 @@ const TrendingRepos = () => {
           </TouchableOpacity>
         ))}
       </View>
-
-      {/* Repository List */}
+      
       <FlatList
         data={repos}
         keyExtractor={(item) => item.node.url}
         renderItem={({ item }) => {
           const repo = item.node;
           return (
-            <TouchableOpacity onPress={() => Linking.openURL(repo.url)}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('RepoDetail', { repo })}
+            >
               <View style={styles.card}>
                 <Image source={{ uri: repo.owner.avatarUrl }} style={styles.avatar} />
                 <View style={styles.info}>
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   info: {
-    flex: 1,
+    display: 'flex',
   },
   name: {
     fontWeight: "bold",

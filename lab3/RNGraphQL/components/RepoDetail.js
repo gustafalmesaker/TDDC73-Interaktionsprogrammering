@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const RepoDetails = ({ route }) => {
-  const { repo } = route.params; // Destructure the `repo` object passed as a parameter
+  const { repo } = route.params; 
 
   return (
     <View style={styles.container}>
