@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Linking } from 'react-native';
 import { gql, useQuery } from '@apollo/client';
 
-const languages = ["All", "JavaScript", "TypeScript", "HTML","Python", "Java", "C++", "Ruby"]; // Language options
+const languages = ["All", "JavaScript", "TypeScript", "HTML","Python", "Java", "C++", "Ruby", "Go"]; // Language options
 
 const GET_TRENDING_REPOS = gql`
   query GetTrendingRepos($query: String!) {
