@@ -102,7 +102,7 @@ const TrendingRepos = ({ navigation }) => {
       {/* Repository List */}
       <FlatList
         data={repos}
-        style={{ backgroundColor: 'red', height: 2000 }}
+        style={{ height: 2000 }}
         keyExtractor={(item) => item.node.url}
         renderItem={({ item }) => {
           const repo = item.node;
