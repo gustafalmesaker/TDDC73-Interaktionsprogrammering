@@ -66,7 +66,7 @@ const TrendingRepos = ({ navigation }) => {
   if (error) return <Text>Error: {error.message}</Text>;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container]}>
       {/* Time Frame Filters */}
       <View style={styles.filterContainer}>
         {["last week", "last month", "last year"].map((frame) => (
@@ -102,6 +102,7 @@ const TrendingRepos = ({ navigation }) => {
       {/* Repository List */}
       <FlatList
         data={repos}
+        style={{ backgroundColor: 'red', height: 2000 }}
         keyExtractor={(item) => item.node.url}
         renderItem={({ item }) => {
           const repo = item.node;
@@ -180,6 +181,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  
 });
 
 export default TrendingRepos;
