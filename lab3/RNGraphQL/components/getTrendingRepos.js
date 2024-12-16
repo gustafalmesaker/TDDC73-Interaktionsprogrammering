@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { gql, useQuery } from '@apollo/client';
 
-const languages = ["All", "JavaScript", "TypeScript", "HTML", "Python", "Java", "C++", "Ruby", "Go"]; // Language options
+const languages = ["All", "JavaScript", "TypeScript", "HTML", "Python", "Java", "C++", "Ruby", "Go"];
 
 const GET_TRENDING_REPOS = gql`
   query GetTrendingRepos($query: String!) {
@@ -66,7 +66,8 @@ const TrendingRepos = ({ navigation }) => {
   if (error) return <Text>Error: {error.message}</Text>;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container]}>
+      {/* Time Frame Filters */}
       <View style={styles.filterContainer}>
         {["last week", "last month", "last year"].map((frame) => (
           <TouchableOpacity
@@ -82,6 +83,7 @@ const TrendingRepos = ({ navigation }) => {
         ))}
       </View>
 
+      {/* Language Filters */}
       <View style={styles.filterContainer}>
         {languages.map((lang) => (
           <TouchableOpacity
@@ -96,18 +98,23 @@ const TrendingRepos = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
-      
+
+      {/* Repository List */}
       <FlatList
         data={repos}
+        style={{ height: 2000 }}
         keyExtractor={(item) => item.node.url}
         renderItem={({ item }) => {
           const repo = item.node;
           return (
             <TouchableOpacity
-              onPress={() => navigation.navigate('RepoDetail', { repo })}
+              onPress={() => navigation.navigate("RepoDetail", { repo })}
             >
               <View style={styles.card}>
-                <Image source={{ uri: repo.owner.avatarUrl }} style={styles.avatar} />
+                <Image
+                  source={{ uri: repo.owner.avatarUrl }}
+                  style={styles.avatar}
+                />
                 <View style={styles.info}>
                   <Text style={styles.name}>{repo.name}</Text>
                   <Text>{repo.description}</Text>
@@ -119,18 +126,20 @@ const TrendingRepos = ({ navigation }) => {
             </TouchableOpacity>
           );
         }}
+        contentContainerStyle={{ paddingBottom: 20 }} // Ensure space for scrolling
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
   filterContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "center",
     marginVertical: 10,
   },
@@ -139,7 +148,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 5,
-    marginHorizontal: 5,
+    margin: 5,
+    backgroundColor: "#eee",
   },
   selectedFilterButton: {
     backgroundColor: "#007bff",
@@ -165,12 +175,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   info: {
-    display: 'flex',
+    flex: 1,
   },
   name: {
     fontWeight: "bold",
     fontSize: 16,
   },
+  
 });
 
 export default TrendingRepos;
