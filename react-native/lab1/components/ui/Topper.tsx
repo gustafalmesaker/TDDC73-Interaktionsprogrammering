@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 
 interface TopperProps {
   style?: ViewStyle;
-  title?: string; // Optional title prop for header text
+  title?: string;
 }
 
 export const Topper: React.FC<TopperProps> = ({ style, title }) => {
@@ -21,10 +21,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#00ff59',
     justifyContent: 'center',
     alignItems: 'flex-start',
+    
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    padding:20
+    padding:20,
   },
 });

@@ -16,7 +16,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.main}>
-      <Topper title='Example 1'/>
+      <Topper title='React Native'/>
       <ThemedView style={styles.mainContent}>
         <ThemedView style={styles.titleContainer}>
           <Image source={require('@/assets/images/circle.png')} style={styles.reactLogo} />
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'space-around', 
+    justifyContent: 'space-between', 
     gap: 8,
     marginVertical: 16,
   },
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     gap: 8,
+    width: 200
 
   },
   reactLogo: {

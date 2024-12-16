@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
             
             // Grid of Buttons
             Wrap(
-              spacing: 20,
+              spacing: 40,
               runSpacing: 20,
               children: List.generate(2, (index) {
                 return ElevatedButton(
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 30),
             Wrap(
-              spacing: 20,
+              spacing: 40,
               runSpacing: 20,
               children: List.generate(2, (index) {
                 return ElevatedButton(

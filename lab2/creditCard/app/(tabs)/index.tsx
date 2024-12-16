@@ -55,11 +55,11 @@ export default function HomeScreen() {
 
   const handleCardNumberChange = (text: string) => {
     const numericText = text.replace(/[^0-9]/g, '');
-    if (numericText.length <= 16) {
-      setCardNumber(numericText);
-      animate(numberAnimation);
-    }
+    const formattedText = numericText.replace(/(\d{4})(?=\d)/g, '$1 '); 
+    setCardNumber(formattedText);
+    animate(numberAnimation);
   };
+  
 
   const handleCardNameChange = (text: string) => {
   const nameText = text.replace(/[^a-zA-Z\s]/g, '');
@@ -86,7 +86,8 @@ export default function HomeScreen() {
   };
 
   const maskedCardNumber = () => {
-    return cardNumber.padEnd(16, '#').replace(/(.{4})(?=.)/g, '$1 ');
+    return cardNumber.padEnd(16, '#');
+    //return cardNumber.padEnd(16, '#').replace(/(.{4})(?=.)/g, '$1 ');
   };
 
   const borderStyle = (field: string) =>
@@ -160,7 +161,8 @@ export default function HomeScreen() {
             onFocus={() => handleInputFocus('cardNumber')}
             onBlur={handleInputBlur}
             onChangeText={handleCardNumberChange}
-            maxLength={16}
+            value={cardNumber}
+            maxLength={19}
           />
         </View>
         <View style={styles.column}>
@@ -171,6 +173,7 @@ export default function HomeScreen() {
             onFocus={() => handleInputFocus('cardName')}
             onBlur={handleInputBlur}
             onChangeText={handleCardNameChange}
+            maxLength={24}
           />
         </View>
         <View style={styles.row}>
