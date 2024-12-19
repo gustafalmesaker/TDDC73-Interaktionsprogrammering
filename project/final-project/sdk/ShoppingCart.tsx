@@ -7,6 +7,7 @@ import {
   Button,
   ScrollView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 type ThemeType = 'light' | 'dark' | 'grey';
 type ButtonSize = 'small' | 'medium' | 'large';
@@ -49,50 +50,66 @@ const ShoppingCart = ({
 
   const currentTheme = themeStyles[theme];
 
+  const renderHeaderContent = () => {
+    if (size === 'small') {
+      return <Ionicons name="cart-outline" size={24} color={currentTheme.textColor} />;
+    }
+    if (size === 'medium') {
+      return <Text style={[styles.headerText, { color: currentTheme.textColor }]}>Shopping Cart</Text>;
+    }
+    if (size === 'large') {
+      return (
+        <View style={styles.headerLarge}>
+          <Ionicons name="cart-outline" size={24} color={currentTheme.textColor} />
+          <Text style={[styles.headerText, { color: currentTheme.textColor }]}>Shopping Cart</Text>
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
-    <View
-      style={[styles.container, { borderColor: currentTheme.borderColor }]}
-    >
+    <View style={[styles.container, { borderColor: currentTheme.borderColor }]}>
       <TouchableOpacity
         onPress={toggleCart}
         style={[styles.header, { backgroundColor: currentTheme.backgroundColor }]}
       >
-        <Text style={[styles.headerText, { color: currentTheme.textColor }]}>
-          Shopping Cart
-        </Text>
+        {renderHeaderContent()}
       </TouchableOpacity>
 
       {isExpanded && (
-        <View
-          style={[
-            styles.overlayCart,
-            { backgroundColor: currentTheme.backgroundColor },
-          ]}
-        >
-          {items.length === 0 ? (
-            <Text style={[styles.emptyText, { color: currentTheme.textColor }]}>
-              Your cart is empty.
-            </Text>
-          ) : (
-            <>
-              {showItems && (
-                <ScrollView style={styles.listOfItems}>
-                  {items.map((item) => (
-                    <Text
-                      key={item.id}
-                      style={[styles.item, { color: currentTheme.textColor }]}
-                    >
-                      {item.name} - ${item.price}
-                    </Text>
-                  ))}
-                </ScrollView>
-              )}
-              <Text style={[styles.total, { color: currentTheme.textColor }]}>
-                Total: ${total}
+        <View style={styles.overlayWrapper}>
+          <View
+            style={[
+              styles.overlayCart,
+              { backgroundColor: currentTheme.backgroundColor, borderColor: currentTheme.borderColor},
+            ]}
+          >
+            {items.length === 0 ? (
+              <Text style={[styles.emptyText, { color: currentTheme.textColor }]}>
+                Your cart is empty.
               </Text>
-              <Button title="Proceed To Checkout" onPress={() => {}} />
-            </>
-          )}
+            ) : (
+              <>
+                {showItems && (
+                  <ScrollView style={styles.listOfItems}>
+                    {items.map((item) => (
+                      <Text
+                        key={item.id}
+                        style={[styles.item, { color: currentTheme.textColor }]}
+                      >
+                        {item.name} - ${item.price}
+                      </Text>
+                    ))}
+                  </ScrollView>
+                )}
+                <Text style={[styles.total, { color: currentTheme.textColor }]}>
+                  Total: ${total}
+                </Text>
+                <Button title="Proceed To Checkout" onPress={() => {}} />
+              </>
+            )}
+          </View>
         </View>
       )}
     </View>
@@ -105,26 +122,44 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     position: 'relative',
-    zIndex: 10
+    zIndex: 2,
   },
   header: {
     padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerText: {
     fontWeight: 'bold',
     fontSize: 16,
   },
+  headerLarge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  overlayWrapper: {
+    position: 'absolute',
+    top: 50,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
+  },
   overlayCart: {
     position: 'absolute',
-    top: 52, 
+    top: 0,
+    right: 0,
     left: '5%', 
-    right: '5%',
-    zIndex: 10, 
+    zIndex: 9999,
     padding: 16,
     borderRadius: 8,
     backgroundColor: 'white',
-    height: 300, 
+    height: 300,
     width: '90%',
+    alignSelf: 'center',
+    borderWidth: 2,
   },
   item: {
     marginVertical: 4,
@@ -141,8 +176,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   listOfItems: {
-    maxHeight: 200, 
+    maxHeight: 200,
   },
 });
-
 export default ShoppingCart;
