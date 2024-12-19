@@ -79,25 +79,16 @@ const Carousel = ({
 
   if (scrollBehaviour === 'scroll') {
     return (
-      <FlatList
+      <View style={styles.container}>
+        <FlatList
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         horizontal
-        contentContainerStyle={{
-          paddingHorizontal: 8,
-          alignItems: 'center',
-        }}
+        scrollEnabled
         showsHorizontalScrollIndicator={true}
-        snapToInterval={cardWidth + 8}
-        snapToAlignment="center"
-        decelerationRate="fast"
-        getItemLayout={(_, index) => ({
-          length: cardWidth + 8,
-          offset: (cardWidth + 8) * index,
-          index,
-        })}
       />
+      </View>
     );
   }
 

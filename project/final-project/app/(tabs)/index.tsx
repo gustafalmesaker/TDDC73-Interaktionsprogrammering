@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Alert } from 'react-native';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import ShoppingCart from '@/sdk/ShoppingCart';
 import Carousel from '@/sdk/Carousel';
 
@@ -15,13 +14,12 @@ export default function HomeScreen() {
 
   const addToCart = (item: { id: string; name: string; price: number }) => {
     setCartItems((prevItems) => [...prevItems, item]);
-    Alert.alert('Item added to cart', `${item.name} has been added to your cart.`);
   };
 
   return (
     <View style={{ flex: 1 , flexDirection: 'column', justifyContent:'space-around'}}>
       <View style={{ position: 'absolute', top: 0, right: 0, zIndex: 10,}}>
-        <ShoppingCart items={cartItems} theme="dark" showItems={true} size="medium" />
+        <ShoppingCart items={cartItems} theme="dark" showItems={true} size="small"/>
       </View>      
       <Carousel data={storeItems} onItemPress={addToCart} theme="dark" itemsPerRow={5} scrollBehaviour="scroll" />
       <Carousel data={storeItems} onItemPress={addToCart} itemsPerRow={5} />

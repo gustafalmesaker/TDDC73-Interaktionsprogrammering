@@ -75,10 +75,11 @@ const ShoppingCart = ({
         style={[styles.header, { backgroundColor: currentTheme.backgroundColor }]}
       >
         {renderHeaderContent()}
+        
       </TouchableOpacity>
 
       {isExpanded && (
-        <View style={styles.overlayWrapper}>
+        <View style={[styles.overlayWrapper, size === 'small' ? { minWidth: 150, left: -75} : {}]}>
           <View
             style={[
               styles.overlayCart,
@@ -178,5 +179,8 @@ const styles = StyleSheet.create({
   listOfItems: {
     maxHeight: 200,
   },
+  smallButtonContainer: {
+    width: 150
+  }
 });
 export default ShoppingCart;
