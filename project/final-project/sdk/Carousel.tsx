@@ -28,7 +28,11 @@ const Carousel = ({
 }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  
+  const screenWidth = Dimensions.get('window').width;
+
+
+  const cardWidth = (screenWidth * 0.9 )/ itemsPerRow - 8; // Subtracting margin for spacing, 0.9 used for buttonspace on the sides
+
   const themeStyles = {
     light: {
       backgroundColor: '#f8f8f8',
@@ -46,10 +50,6 @@ const Carousel = ({
 
   const currentTheme = themeStyles[theme];
 
-  // Calculate card width dynamically based on itemsPerRow
-  const cardWidth = `${100 / itemsPerRow}%`;
-
-  // Pagination logic for "buttons" behavior
   const wrapIndex = (index: number) => (index + data.length) % data.length;
 
   const visibleData = Array.from({ length: itemsPerRow }, (_, i) =>
@@ -64,21 +64,18 @@ const Carousel = ({
     setCurrentIndex((prevIndex) => wrapIndex(prevIndex - itemsPerRow));
   };
 
-  // Render item for FlatList (scroll behavior)
-  const renderItem = ({ item }: { item: { id: string; name: string; price: number } }) => 
-  { 
-    return (
+  const renderItem = ({ item }: { item: { id: string; name: string; price: number } }) => (
     <TouchableOpacity
       style={[
         styles.card,
-        { paddingLeft: 20, paddingRight: 20, backgroundColor: currentTheme.backgroundColor },
+        { width: cardWidth, backgroundColor: currentTheme.backgroundColor },
       ]}
       onPress={() => onItemPress(item)}
     >
       <Text style={[styles.cardText, { color: currentTheme.textColor }]}>{item.name}</Text>
       <Text style={[styles.cardText, { color: currentTheme.textColor }]}>${item.price}</Text>
     </TouchableOpacity>
-  )};
+  );
 
   if (scrollBehaviour === 'scroll') {
     return (
@@ -87,14 +84,31 @@ const Carousel = ({
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         horizontal
-        contentContainerStyle={styles.carouselContainer}
-        style={styles.listContainer}
+        contentContainerStyle={{
+          paddingHorizontal: 8,
+          alignItems: 'center',
+        }}
+        showsHorizontalScrollIndicator={true}
+        snapToInterval={cardWidth + 8}
+        snapToAlignment="center"
+        decelerationRate="fast"
+        getItemLayout={(_, index) => ({
+          length: cardWidth + 8,
+          offset: (cardWidth + 8) * index,
+          index,
+        })}
       />
     );
   }
 
+
   return (
-    <View>
+    <View style={styles.container}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={prevPage} style={styles.navButton}>
+            <Text style={styles.navText}>{'<'}</Text>
+          </TouchableOpacity>
+        </View>
       <View style={styles.carouselContainer}>
         {visibleData.map((item) => (
           <TouchableOpacity
@@ -110,10 +124,7 @@ const Carousel = ({
           </TouchableOpacity>
         ))}
       </View>
-      <View style={styles.navigationContainer}>
-        <TouchableOpacity onPress={prevPage} style={styles.navButton}>
-          <Text style={styles.navText}>{'<'}</Text>
-        </TouchableOpacity>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={nextPage} style={styles.navButton}>
           <Text style={styles.navText}>{'>'}</Text>
         </TouchableOpacity>
@@ -125,9 +136,7 @@ const Carousel = ({
 const styles = StyleSheet.create({
   carouselContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginHorizontal: 16,
-    flexGrow: 1,
   },
   card: {
     height: 150,
@@ -149,17 +158,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   navButton: {
-    padding: 8,
     borderRadius: 4,
+    height: 75,
     backgroundColor: '#ddd',
+    justifyContent:'center'
+    
   },
   navText: {
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign:'center',
+    textAlignVertical: 'center',
   },
-  listContainer:{
-      
+  container: {
+    flexDirection: 'row',
+    width:'100%',
+    justifyContent:'space-evenly'
   },
+  buttonContainer: {
+    justifyContent: 'center',
+    width: 50
+  }
 });
-
 export default Carousel;
