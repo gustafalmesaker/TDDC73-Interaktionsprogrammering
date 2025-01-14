@@ -8,10 +8,10 @@ import {
   Dimensions
 } from 'react-native';
 
-type ThemeType = 'light' | 'dark' | 'grey';
+type ThemeType = 'light' | 'dark' | 'grey'; 
 type ScrollType = 'scroll' | 'buttons';
 
-interface CarouselProps {
+interface CarouselProps { //defines props that the component accepts
   data: { id: string; name: string; price: number }[];
   theme?: ThemeType;
   itemsPerRow?: number;
@@ -19,19 +19,18 @@ interface CarouselProps {
   onItemPress: (item: { id: string; name: string; price: number }) => void;
 }
 
-const Carousel = ({
+const Carousel = ({ //Carousel component
   data,
-  theme = 'light',
-  itemsPerRow = 3,
+  theme = 'dark',
+  itemsPerRow = 4,
   scrollBehaviour = 'buttons',
   onItemPress,
 }: CarouselProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0); //track current index of carousel
 
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get('window').width; //get screen width
 
-
-  const cardWidth = (screenWidth * 0.9 )/ itemsPerRow - 8; // Subtracting margin for spacing, 0.9 used for buttonspace on the sides
+  const cardWidth = (screenWidth * 0.9 )/ itemsPerRow - 8; //calculate card width, based on screen width and items per row
 
   const themeStyles = {
     light: {
@@ -50,20 +49,21 @@ const Carousel = ({
 
   const currentTheme = themeStyles[theme];
 
-  const wrapIndex = (index: number) => (index + data.length) % data.length;
+  const wrapIndex = (index: number) => (index + data.length) % data.length; //wrap index around data array, circular carousel
 
   const visibleData = Array.from({ length: itemsPerRow }, (_, i) =>
-    data[wrapIndex(currentIndex + i)]
-  );
+    data[wrapIndex(currentIndex + i)] 
+  ); //creates array of data based on itemsPerRow and currentIndex
 
   const nextPage = () => {
     setCurrentIndex((prevIndex) => wrapIndex(prevIndex + itemsPerRow));
-  };
+  }; 
 
   const prevPage = () => {
     setCurrentIndex((prevIndex) => wrapIndex(prevIndex - itemsPerRow));
-  };
+  }; 
 
+  //renders each item in the Carousel as a touchable card
   const renderItem = ({ item }: { item: { id: string; name: string; price: number } }) => (
     <TouchableOpacity
       style={[
@@ -77,7 +77,7 @@ const Carousel = ({
     </TouchableOpacity>
   );
 
-  if (scrollBehaviour === 'scroll') {
+  if (scrollBehaviour === 'scroll') { //if scrollBehaviour is set to scroll, use FlatList
     return (
       <View style={styles.container}>
         <FlatList
@@ -93,15 +93,15 @@ const Carousel = ({
   }
 
 
-  return (
-    <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={prevPage} style={styles.navButton}>
-            <Text style={styles.navText}>{'<'}</Text>
-          </TouchableOpacity>
-        </View>
+  return ( //if scrollBehaviour is set to buttons, use TouchableOpacity (buttons)
+    <View style={styles.container}> 
+      <View style={styles.buttonContainer}> 
+        <TouchableOpacity onPress={prevPage} style={styles.navButton}>
+          <Text style={styles.navText}>{'<'}</Text> 
+        </TouchableOpacity>
+      </View>
       <View style={styles.carouselContainer}>
-        {visibleData.map((item) => (
+        {visibleData.map((item) => ( //maps over visible items to render each item as touchable card
           <TouchableOpacity
             key={item.id}
             style={[

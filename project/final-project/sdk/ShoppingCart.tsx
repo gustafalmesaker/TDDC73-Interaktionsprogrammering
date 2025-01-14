@@ -12,23 +12,24 @@ import { Ionicons } from '@expo/vector-icons';
 type ThemeType = 'light' | 'dark' | 'grey';
 type ButtonSize = 'small' | 'medium' | 'large';
 
-interface ShoppingCartProps {
+interface ShoppingCartProps { //defines props that the component accepts
   items: { id: string; name: string; price: number }[];
   theme?: ThemeType;
   showItems?: boolean;
   size?: ButtonSize;
 }
 
-const ShoppingCart = ({
+const ShoppingCart = ({ //ShoppingCart component
   items,
-  theme = 'light',
+  theme = 'dark',
   showItems = true,
   size = 'medium',
-}: ShoppingCartProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+}: ShoppingCartProps) => { 
+  const [isExpanded, setIsExpanded] = useState(false); //track if cart is expanded
 
-  const toggleCart = () => setIsExpanded(!isExpanded);
-  const total = items.reduce((sum, item) => sum + item.price, 0);
+  const toggleCart = () => setIsExpanded(!isExpanded); //change isExpanded state when pressed
+
+  const total = items.reduce((sum, item) => sum + item.price, 0); //total price in cart
 
   const themeStyles = {
     light: {
@@ -50,7 +51,7 @@ const ShoppingCart = ({
 
   const currentTheme = themeStyles[theme];
 
-  const renderHeaderContent = () => {
+  const renderHeaderContent = () => { //render based on size prop
     if (size === 'small') {
       return <Ionicons name="cart-outline" size={24} color={currentTheme.textColor} />;
     }
@@ -68,17 +69,17 @@ const ShoppingCart = ({
     return null;
   };
 
-  return (
+  return ( //main container with styles applied
     <View style={[styles.container, { borderColor: currentTheme.borderColor }]}>
       <TouchableOpacity
-        onPress={toggleCart}
+        onPress={toggleCart} //toggleCart when pressed
         style={[styles.header, { backgroundColor: currentTheme.backgroundColor }]}
       >
         {renderHeaderContent()}
         
       </TouchableOpacity>
 
-      {isExpanded && (
+      {isExpanded && ( //if true, renders the cart overlay
         <View style={[styles.overlayWrapper, size === 'small' ? { minWidth: 150, left: -75} : {}]}>
           <View
             style={[
@@ -86,15 +87,15 @@ const ShoppingCart = ({
               { backgroundColor: currentTheme.backgroundColor, borderColor: currentTheme.borderColor},
             ]}
           >
-            {items.length === 0 ? (
+            {items.length === 0 ? ( //if-sats, if no items in cart show text
               <Text style={[styles.emptyText, { color: currentTheme.textColor }]}>
                 Your cart is empty.
               </Text>
             ) : (
               <>
-                {showItems && (
+                {showItems && ( //if not empty, display lists of items
                   <ScrollView style={styles.listOfItems}>
-                    {items.map((item) => (
+                    {items.map((item) => ( //map creates new text component to the list in a scrollview
                       <Text
                         key={item.id}
                         style={[styles.item, { color: currentTheme.textColor }]}
@@ -103,12 +104,12 @@ const ShoppingCart = ({
                       </Text>
                     ))}
                   </ScrollView>
-                )}
+                )} 
                 <Text style={[styles.total, { color: currentTheme.textColor }]}>
                   Total: ${total}
                 </Text>
-                <Button title="Proceed To Checkout" onPress={() => {}} />
-              </>
+                <Button title="Proceed To Checkout" onPress={() => {}} /> 
+              </> //total price and button 
             )}
           </View>
         </View>
