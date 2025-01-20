@@ -18,9 +18,9 @@ export default function HomeScreen() {
       const itemExists = prevItems.some((cartItem) => cartItem.id === item.id);
       if (itemExists) {
         alert(`The item "${item.name}" is already in the cart.`);
-        return prevItems; // Return the existing cart without changes
+        return prevItems; 
       }
-      return [...prevItems, item]; // Add the new item to the cart
+      return [...prevItems, item];
     });
   };
   
