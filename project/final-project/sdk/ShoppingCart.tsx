@@ -51,6 +51,18 @@ const ShoppingCart = ({ //ShoppingCart component
 
   const currentTheme = themeStyles[theme];
 
+
+  const handleProceedToCheckout = () => {
+    if (items.length === 0) {
+      alert('Your cart is empty.');
+      return;
+    }
+
+    console.log('Proceeding to checkout with items:', items);
+    alert(`Proceeding to checkout. Total: $${total}`);
+  };
+
+
   const renderHeaderContent = () => { //render based on size prop
     if (size === 'small') {
       return <Ionicons name="cart-outline" size={24} color={currentTheme.textColor} />;
@@ -108,8 +120,8 @@ const ShoppingCart = ({ //ShoppingCart component
                 <Text style={[styles.total, { color: currentTheme.textColor }]}>
                   Total: ${total}
                 </Text>
-                <Button title="Proceed To Checkout" onPress={() => {}} /> 
-              </> //total price and button 
+                <Button title="Proceed To Checkout" onPress={handleProceedToCheckout} /> 
+              </> //total price and button skicka vidare items
             )}
           </View>
         </View>
